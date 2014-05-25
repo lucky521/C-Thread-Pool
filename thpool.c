@@ -1,39 +1,15 @@
-/* ********************************
- * 
- * Author:  Johan Hanssen Seferidis
- * Date:    12/08/2011
- * Update:  01/11/2011
- * License: LGPL
- * 
- * 
- *//** @file thpool.h *//*
- ********************************/
-
-/* Library providing a threading pool where you can add work. For an example on 
- * usage you refer to the main file found in the same package */
-
-/* 
- * Fast reminders:
- * 
- * tp           = threadpool 
- * thpool       = threadpool
- * thpool_t     = threadpool type
- * tp_p         = threadpool pointer
- * sem          = semaphore
- * xN           = x can be any string. N stands for amount
- * 
- * */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
 #include <semaphore.h>
 #include <errno.h>
+#include <unistd.h>
 
 #include "thpool.h"      /* here you can also find the interface to each function */
 
+const double S = 0.5;
 
-static int thpool_keepalive=1;
+static int thpool_keepalive = 1;
 
 /* Create mutex variable */
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER; /* used to serialize queue access */
@@ -126,7 +102,8 @@ void thpool_thread_do(thpool_t* tp_p){
 int thpool_add_work(thpool_t* tp_p, void *(*function_p)(void*), void* arg_p){
 	thpool_job_t* newJob;
 	
-	newJob=(thpool_job_t*)malloc(sizeof(thpool_job_t));                        /* MALLOC job */
+	newJob=(thpool_job_t*)malloc(sizeof(thpool_job_t));  
+	                      /* MALLOC job */
 	if (newJob==NULL){
 		fprintf(stderr, "thpool_add_work(): Could not allocate memory for new job\n");
 		exit(1);
@@ -147,10 +124,15 @@ int thpool_add_work(thpool_t* tp_p, void *(*function_p)(void*), void* arg_p){
 
 /* Destroy the threadpool */
 void thpool_destroy(thpool_t* tp_p){
+	
+	/* Make sure thpool_jobqueue is empty */
+	while(thpool_jobqueue_peek(tp_p) != NULL)
+		sleep(S);
+	
 	int t;
 	
 	/* End each thread's infinite loop */
-	thpool_keepalive=0; 
+	thpool_keepalive = 0; 
 
 	/* Awake idle threads waiting at semaphore */
 	for (t=0; t<(tp_p->threadsN); t++){
@@ -222,12 +204,14 @@ void thpool_jobqueue_add(thpool_t* tp_p, thpool_job_t* newjob_p){ /* remember th
 	(tp_p->jobqueue->jobsN)++;     /* increment amount of jobs in queue */
 	sem_post(tp_p->jobqueue->queueSem);
 	
-	int sval;
-	sem_getvalue(tp_p->jobqueue->queueSem, &sval);
 }
 
 
-/* Remove job from queue */
+/* 
+	Remove job from queue 
+	Return value: 	-1	error
+			0	ok
+*/
 int thpool_jobqueue_removelast(thpool_t* tp_p){
 	thpool_job_t *oldLastJob;
 	oldLastJob = tp_p->jobqueue->tail;
@@ -251,9 +235,7 @@ int thpool_jobqueue_removelast(thpool_t* tp_p){
 	}
 	
 	(tp_p->jobqueue->jobsN)--;
-	
-	int sval;
-	sem_getvalue(tp_p->jobqueue->queueSem, &sval);
+
 	return 0;
 }
 
@@ -263,20 +245,21 @@ thpool_job_t* thpool_jobqueue_peek(thpool_t* tp_p){
 	return tp_p->jobqueue->tail;
 }
 
-/* Remove and deallocate all jobs in queue */
-void thpool_jobqueue_empty(thpool_t* tp_p){
-	
+
+void thpool_jobqueue_empty(thpool_t* tp_p)
+{
 	thpool_job_t* curjob;
-	curjob=tp_p->jobqueue->tail;
+	curjob = tp_p->jobqueue->tail;
 	
-	while(tp_p->jobqueue->jobsN){
-		tp_p->jobqueue->tail=curjob->prev;
+	while(tp_p->jobqueue->jobsN)
+	{
+		tp_p->jobqueue->tail = curjob->prev;
 		free(curjob);
-		curjob=tp_p->jobqueue->tail;
+		curjob = tp_p->jobqueue->tail;
 		tp_p->jobqueue->jobsN--;
 	}
 	
-	/* Fix head and tail */
-	tp_p->jobqueue->tail=NULL;
-	tp_p->jobqueue->head=NULL;
+	tp_p->jobqueue->tail = NULL;
+	tp_p->jobqueue->head = NULL;
 }
+
