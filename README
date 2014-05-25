@@ -1,6 +1,8 @@
-Author: Johan Hanssen Seferidis
-Created: 2011-08-12
-Updated: 2011-11-07
+#C-Thread-Pool C语言实现线程池
+
+
+
+
 
 
 
@@ -91,3 +93,7 @@ DESCRIPTION
 
      Example:
      thpool_destroy(threadpool_p);           //threadpool_p being a pointer to a thpool_t
+
+
+==
+Forked from Johan Hanssen Seferidis
