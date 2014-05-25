@@ -10,12 +10,12 @@
 The library is not precompiled so you have to compile it with your project. The thread pool
 uses POSIX threads so if you compile with gcc you have to use the flag -pthread like this:
 
-  gcc main.c thpool.c -pthread -o test
+  <code>gcc main.c thpool.c -pthread -o test</code>
 
 
 Then run the executable like this:
 
-  ./test
+  <code>./test</code>
 
 
 
@@ -32,6 +32,7 @@ Then run the executable like this:
 
 
 NAME
+
      thpool_t* thpool_init(int num_of_threads);
 
 SYNOPSIS
@@ -97,4 +98,5 @@ DESCRIPTION
 
 ====== 
 **Forked from Johan Hanssen Seferidis**
+
 May. 2014
