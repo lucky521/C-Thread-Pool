@@ -101,13 +101,6 @@ typedef struct thpool_t{
 }thpool_t;
 
 
-/* Container for all things that each thread is going to need */
-typedef struct thread_data{                            
-	pthread_mutex_t *mutex_p;
-	thpool_t        *tp_p;
-}thread_data;
-
-
 
 /* =========================== FUNCTIONS ================================================ */
 
