@@ -1,13 +1,10 @@
-# C-Thread-Pool C语言实现线程池 #
+# Linux下C语言实现线程池
+------
+> * pthread线程
+> * 使用线程信号量
 
 
-
-
-
-
-
-
-=================================== Compiling =====================================
+## 编译
 The library is not precompiled so you have to compile it with your project. The thread pool
 uses POSIX threads so if you compile with gcc you have to use the flag -pthread like this:
 
@@ -20,7 +17,7 @@ Then run the executable like this:
 
 
 
-====================================== Usage  ======================================
+## 使用
 
 1. Make a thread pool:                       thpool_t* thpool;
 2. Initialise the thread pool with number
@@ -29,10 +26,7 @@ Then run the executable like this:
 4. Destroy pool:                             thpool_destroy(thpool);
 
 
-
-
-
-=============================== Threadpool Interface ===============================
+## Threadpool Interface
 
 
 NAME
@@ -53,47 +47,8 @@ DESCRIPTION
      myThreadpool=thpool_init(4);            //then we initialise it to 4 threads
 
 
------------------------------------------------------------------------------------
 
 
-
-NAME
-     thpool_add_work(thpool_t* thpool, void *(*function_p)(void*), void* arg_p);
-
-SYNOPSIS
-  
-     #include <thpool.h>
-
-     int thpool_add_work(thpool_t* thpool, void *(*function_p)(void*), void* arg_p);
-
-DESCRIPTION
-
-     Adds work to the thread pool. Work is concidered an individual function with an argument. First argument is a pointer to the pool itself. The second argument is a pointer to a function and third argument is a pointer to an argument. To pass multiple arguments just use a struct. If the function you want to pass doesn't fit the parameters of this prototype, use casting. If your function or argument doesn't fit the parameters' and return's value type then you should use casting to avoid warnings from the compiler.
-
-     Example:
-     void printSth(char* str);                              //Prints a text on the screen
-     thpool_add_work(thpool, (void*)printSth, (void*)str);  //Pay attention to the casting
-
-
------------------------------------------------------------------------------------
-
-
-NAME
-     void thpool_destroy(thpool_t* tp_p);
-
-SYNOPSIS
-  
-     #include <thpool.h>
-
-     void thpool_destroy(thpool_t* tp_p);
-
-DESCRIPTION
-
-     This function will destroy a threadpool. If some threads are working in the pool then thpool_destroy() will wait for them to finish. Once they are finished the threadpool is deallocated releasing all resources back to the system.
-
-     Example:
-     thpool_destroy(threadpool_p);           //threadpool_p being a pointer to a thpool_t
-
-
-==
-Forked from Johan Hanssen Seferidis
+====== 
+**Forked from Johan Hanssen Seferidis**
+May. 2014
