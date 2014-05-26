@@ -67,6 +67,7 @@ Then run the executable like this:
 
 ### 线程池结构体
 包含指向各个线程的指针数组，线程个数，任务队列。
+
     typedef struct thpool_t{
 
     	pthread_t*       threads;   
