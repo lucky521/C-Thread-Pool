@@ -2,7 +2,7 @@
 
 
 > * pthread线程
-> * 构造双向链表维持任务队列
+> * 构造双向链表维持待完成任务队列
 > * 使用线程信号量sem_t控制线程池
 > * 使用线程互斥锁pthread_mutex_t保护任务队列
 
@@ -22,8 +22,8 @@ Then run the executable like this:
 
 ## 使用说明
 
-1. Make a thread pool: <code>thpool_t* thpool;</code>
-2. Initialise the thread pool with number
+1. Set a thread pool: <code>thpool_t* thpool;</code>
+2. Initialise the thread pool with number N
    of threads(workers) you want:             <code>thpool=thpool_init(N);</code>
 3. Add work to the pool:                     <code>thpool_add_work(thpool, (void*)doSth, (void*)arg);</code>
 4. Destroy pool:                             <code>thpool_destroy(thpool);</code>
