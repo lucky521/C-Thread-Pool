@@ -32,17 +32,18 @@ typedef struct thpool_t{
 }thpool_t;
 
 
+/*	Extern Interface	*/
 
 thpool_t* thpool_init(int threadsN);
-
-void thpool_thread_do(thpool_t* tp_p);
 
 int thpool_add_work(thpool_t* tp_p, void*(*function_p)(void *), void* arg_p);
 
 void thpool_destroy(thpool_t* tp_p);
 
 
+/*	Intern Operations	*/
 
+void thpool_thread_do(thpool_t* tp_p);
 
 int thpool_jobqueue_init(thpool_t* tp_p);
 
