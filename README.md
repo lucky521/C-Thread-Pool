@@ -51,6 +51,8 @@ Then run the executable like this:
 ### 任务队列结构体
 包括队列头结点，尾结点，任务个数，任务信号量。
 
+当外部添加任务时，在头结点位置增加任务；当有空闲线程且任务列表中有任务时，从尾结点摘取任务。
+
     typedef struct thpool_jobqueue{
 
 	    thpool_job_t *head;          
