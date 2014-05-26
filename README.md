@@ -20,7 +20,7 @@ Then run the executable like this:
 
 
 
-## 使用说明
+## 接口说明
 
 1. Set a thread pool: <code>thpool_t* thpool;</code>
 2. Initialise the thread pool with number N
