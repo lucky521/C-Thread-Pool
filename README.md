@@ -81,8 +81,8 @@ Then run the executable like this:
 
 
 ====== 
-**Forked from Johan Hanssen Seferidis**
+Forked from **Johan Hanssen Seferidis**
 
-Lucky. 
+**Lucky** . 
 
 May. 2014
