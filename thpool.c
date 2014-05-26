@@ -34,7 +34,7 @@ thpool_t* thpool_init(int threadsN){
 		fprintf(stderr, "thpool_init(): Could not allocate memory for thread IDs\n");
 		return NULL;
 	}
-	tp_p->threadsN=threadsN;
+	tp_p->threadsN = threadsN;
 	
 	/* Initialise the job queue */
 	if (thpool_jobqueue_init(tp_p)==-1){
@@ -80,8 +80,8 @@ void thpool_thread_do(thpool_t* tp_p){
 			pthread_mutex_lock(&mutex);                  /* LOCK */
 			
 			job_p = thpool_jobqueue_peek(tp_p);
-			func_buff=job_p->function;
-			arg_buff =job_p->arg;
+			func_buff = job_p->function;
+			arg_buff = job_p->arg;
 			thpool_jobqueue_removelast(tp_p);
 			
 			pthread_mutex_unlock(&mutex);                /* UNLOCK */
@@ -100,18 +100,17 @@ void thpool_thread_do(thpool_t* tp_p){
 
 /* Add work to the thread pool */
 int thpool_add_work(thpool_t* tp_p, void *(*function_p)(void*), void* arg_p){
-	thpool_job_t* newJob;
-	
-	newJob=(thpool_job_t*)malloc(sizeof(thpool_job_t));  
-	                      /* MALLOC job */
+
+	thpool_job_t* newJob = (thpool_job_t*)malloc(sizeof(thpool_job_t));  /* MALLOC job */
+	                      
 	if (newJob==NULL){
 		fprintf(stderr, "thpool_add_work(): Could not allocate memory for new job\n");
 		exit(1);
 	}
 	
 	/* add function and argument */
-	newJob->function=function_p;
-	newJob->arg=arg_p;
+	newJob->function = function_p;
+	newJob->arg = arg_p;
 	
 	/* add job to queue */
 	pthread_mutex_lock(&mutex);                  /* LOCK */
@@ -213,11 +212,13 @@ void thpool_jobqueue_add(thpool_t* tp_p, thpool_job_t* newjob_p){ /* remember th
 			0	ok
 */
 int thpool_jobqueue_removelast(thpool_t* tp_p){
+
 	thpool_job_t *oldLastJob;
 	oldLastJob = tp_p->jobqueue->tail;
 	
 	/* fix jobs' pointers */
-	switch(tp_p->jobqueue->jobsN){
+	switch(tp_p->jobqueue->jobsN)
+	{
 		
 		case 0:     /* if there are no jobs in queue */
 					return -1;
@@ -229,8 +230,8 @@ int thpool_jobqueue_removelast(thpool_t* tp_p){
 					break;
 					
 		default: 	/* if there are more than one jobs in queue */
-					oldLastJob->prev->next=NULL;               /* the almost last item */
-					tp_p->jobqueue->tail=oldLastJob->prev;
+					oldLastJob->prev->next = NULL;               /* the almost last item */
+					tp_p->jobqueue->tail = oldLastJob->prev;
 					
 	}
 	
@@ -240,7 +241,7 @@ int thpool_jobqueue_removelast(thpool_t* tp_p){
 }
 
 
-/* Get first element from queue */
+/* Get tail element from queue */
 thpool_job_t* thpool_jobqueue_peek(thpool_t* tp_p){
 	return tp_p->jobqueue->tail;
 }
